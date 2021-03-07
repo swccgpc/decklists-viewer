@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Decklist Viewer</title>
+<style type="text/css">
+  body { background-color:#292929; font-family:sans-serif; color:#ffffff; }
+  a { color:#ffffff; }
+  a:hover { color:#292929; background-color:#ffffff; }
+  ul { color:#ffffff; }
+
+  .modalImg,.modalDeckImg {
+    border-radius: 5px;
+    cursor:        pointer;
+    transition:    0.3s;
+  } /* #myImg */
+
+  .modalImg:hover,.modaldeckImg:hover { opacity: 0.7; }
+
+  /* The Modal (background) */
+  .modal { z-index: 10; }
+  .modal-deck { z-index: 1; }
+
+  .modal {
+    border:4px red solid;
+    display:          none;  /* Hidden by default */
+    position:         fixed; /* Stay in place */
+    padding-top:      5px; /* Location of the box */
+    left:             25%;
+    top:              25%;
+    width:            348px;    /* 100%; */ /* Full width */
+    /*height:           487px; */   /* 100%; */ /* Full height */
+    overflow:         auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0);      /* Fallback color */
+    background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
+  }
+
+  .modal-deck {
+    border:4px yellow solid;
+    display:          none;  /* Hidden by default */
+    position:         fixed; /* Stay in place */
+    padding:          10px;
+    left:             10%;
+    top:              10%;
+    width:            80%; /* Full width */
+    height:           80%; /* Full height */
+    overflow:         auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0);      /* Fallback color */
+    background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
+  }
+
+
+  /* Modal Content (image) */
+  .modal-content,
+  .modal-deck-content {
+    margin:    auto;
+    display:   block;
+    /* width:     80%; */
+    /* max-width: 700px; */
+  }
+
+  /* Caption of Modal Image */
+  #modalCaption,
+  #modalDeckCaption {
+    margin:     auto;
+    display:    block;
+    width:      80%;
+    /* max-width:  700px; */
+    text-align: center;
+    color:      #ccc;
+    padding:    10px 0;
+    height:     150px;
+  }
+
+  /* Add Animation */
+  /* .modal-content, #modalCaption */
+  /* .modal-deck-content, #modalDeckCaption */
+  /* {
+    -webkit-animation-name: zoom;
+    -webkit-animation-duration: 0.6s;
+    animation-name: zoom;
+    animation-duration: 0.6s;
+  } */
+
+  @-webkit-keyframes zoom {
+    from {-webkit-transform:scale(0)}
+    to {-webkit-transform:scale(1)}
+  }
+
+  @keyframes zoom {
+    from {transform:scale(0)}
+    to {transform:scale(1)}
+  }
+
+  /* The Close Button */
+  #closeModal,
+  #closeDeckModal {
+    position:    absolute;
+    top:         15px;
+    right:       35px;
+    color:       #f1f1f1;
+    font-size:   40px;
+    font-weight: bold;
+    transition:  0.3s;
+  }
+
+  #closeModal:hover,
+  #closeModal:focus,
+  #closeDeckModal:hover,
+  #closeDeckModal:focus {
+    color:           #bbb;
+    text-decoration: none;
+    cursor:          pointer;
+  }
+
+  /* 100% Image Width on Smaller Screens */
+  @media only screen and (max-width: 700px){
+    .modal-content,.modal-deck-content { width: 100%; }
+  }
+</style>
+
+<!-- *********************************** -->
+<!-- *********************************** -->
+<!-- *********************************** -->
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> 
+
+<script type="text/javascript">
+function modalizeImage(img, caption) {
+  var modal             = document.getElementById('myModal');
+  var modalImg          = document.getElementById('modalImg');
+  var closeModal        = document.getElementById('closeModal');
+  var captionText       = document.getElementById('modalCaption');
+
+  modal.style.display   = 'block';
+  modalImg.src          = img; //img.src;
+  captionText.innerHTML = caption; //img.alt;
+} // img.onclick
+
+
+function closeModal() {
+  var modal             = document.getElementById('myModal');
+  modal.style.display   = 'none';
+} // closeModal
+
+
+
+function modalizeDeck(deck_path, deck_path_short, deck_name) {
+  var modal               = document.getElementById('myDeckModal');
+  var closeModal          = document.getElementById('closeDeckModal');
+  var modalDeckName       = document.getElementById('modal-deck-name');
+  var modalDeckEvent      = document.getElementById('modal-deck-event');
+  var modalDeckFullname   = document.getElementById('modal-deck-fullname');
+
+
+  modalDeckName.innerHTML     = deck_name;
+  modal.style.display         = 'block';
+
+
+
+  var modalDeckName       = document.getElementById('modal-deck-name');
+  var modalDeckEvent      = document.getElementById('modal-deck-event');
+  var modalDeckFullname   = document.getElementById('modal-deck-fullname');
+
+  jQuery.getJSON( "https://res.starwarsccg.org/decklists/"+deck_path, function( data ) {
+    jQuery.each( data, function( key, decklists ) {
+      console.log(key, decklists);
+      modalDeckEvent.innerHTML    = decklists.userinfo.event;
+      modalDeckFullname.innerHTML = decklists.userinfo.fullname;
+      // document.getElementById('modal-deck-content').innerHTML = "";
+      console.log(decklists.STARTING);
+      jQuery.each( decklists.STARTING, function( i ) {
+        var card = decklists.STARTING[i];
+        console.log(card);
+        jQuery("ul#modal-deck-content").append(`<li><a onclick="modalizeImage('https://res.starwarsccg.org/cards/Virtual0-Dark/large/grandmofftarkin.gif', '${card}');" href="#GrandMoffTarkinV">${card}</a></li>`);
+      }); // jQuery.each( decklists.STARTING, function( i, card )
+    }); // jQuery.each( data, function( key, decklists )
+  }); // jQuery.getJSON
+
+
+
+} // img.onclick
+
+function closeDeckModal() {
+  var modal             = document.getElementById('myDeckModal');
+  modal.style.display   = 'none';
+} // closeModal
+</script>
+</head>
+<body>
+
+<!-- *********************************** -->
+<!-- *********************************** -->
+<!-- *********************************** -->
+
+<h2>Event Decks</h2>
+
+<div id="myModal" class="modal">
+  <span id="closeModal" onclick="closeModal();">&times;</span>
+  <img class="modal-content" id="modalImg" />
+  <div id="modalCaption"></div>
+</div>
+
+
+<div id="myDeckModal" class="modal-deck">
+  <span id="closeDeckModal" onclick="closeDeckModal();">&times;</span>
+  <div class="modal-deck-content" id="modalDeck">
+    <h2 id="modal-deck-name"></h2>
+    <h3 id="modal-deck-event"></h3>
+    <h4 id="modal-deck-fullname"></h4>
+    <ul id="modal-deck-content" class="modal-deck-content">
+      <li><a onclick="modalizeImage('https://res.starwarsccg.org/cards/Virtual0-Dark/large/grandmofftarkin.gif', 'Grand Moff Tarkin (V)');" href="#GrandMoffTarkinV">Grand Moff Tarkin (V)</a></li>
+    </ul>
+  </div>
+</div>
+
+
+<div id="decklists-container" name="decklists-container" class="decklists-container">
+  <ul id="decklist">
+    <!-- li><a onclick="modalizeDeck('Tarkin Doctrine');" href="#TarkinDoctrine">Tarkin Doctrine Deck</a></li -->
+  </ul>
+</div>
+
+<!-- *********************************** -->
+<!-- *********************************** -->
+<!-- *********************************** -->
+
+<script>
+
+
+function getUrlVars() {
+    var vars   = [], hash;
+    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+    for(var i = 0; i < hashes.length; i++) {
+        hash = hashes[i].split('=');
+        vars.push(hash[0]);
+        vars[hash[0]] = hash[1];
+    }
+    return vars;
+}
+
+(function($) {
+
+  var window_location_hash = window.location.hash;
+  console.log("window location:", window_location_hash);
+  var deck = getUrlVars()["deck"];
+  console.log("deck:", deck);
+
+  if ((window_location_hash == "") && (deck == undefined)) {
+
+    var decklist_json_url = "https://res.starwarsccg.org/decklists/index.json";
+    decklist_json_url = "https://raw.githubusercontent.com/swccgpc/decklists/main/json/index.json";
+
+    $.getJSON( decklist_json_url, function( data ) {
+
+      $.each( data, function( event_name, swccg_event ) {
+
+        var event_name_id = event_name.replace(/[ -]+/g, '');
+        $( "ul#decklist").append(`
+  <li><strong>${event_name}</strong>
+    <ul id="${event_name_id}">
+      <li><strong>Dark Side Decks</strong><ul id="${event_name_id}-dark-side-decks"></ul></li>
+      <li><strong>Light Side Decks</strong><ul id="'+event_name_id+'-light-side-decks"></ul></li>
+    </ul><!-- / ${event_name_id} -->
+  </li><!-- / ${event_name} -->
+  `);
+
+        $.each(swccg_event.DS, function(ds_deck_name, ds_deck_path) {
+          var ds_deck_path_short  = ds_deck_path.replace(/^json\//, '').replace("/", "%2f");
+          $( "ul#"+event_name_id+"-dark-side-decks").append( `<li><a onclick="modalizeDeck('${ds_deck_path_short}', '${ds_deck_path_short}', '${ds_deck_name}');" href="#${ds_deck_path_short}">${ds_deck_name}</a></li>` );
+        }); // DS
+        $.each(swccg_event.LS, function(ls_deck_name, ls_deck_path) {
+          var ls_deck_path_short = ls_deck_path.replace(/^json\//, '').replace("/", "%2f");
+          $( "ul#"+event_name_id+"-light-side-decks").append( `<li><a onclick="modalizeDeck('${ls_deck_path_short}', '${ls_deck_path_short}', '${ls_deck_name}');" href="#${ls_deck_path_short}">${ls_deck_name}</a></li>` );
+        }); // LS
+
+
+      }); // each data
+
+    }); // getJSON
+    
+
+  } else {
+    $("div#decklists-container").html = `<h3>${deck} Deck</h3>`;
+    $("ul#decklist").append = `<li>${deck}</li>`;
+  }
+
+})( jQuery );
+</script>
+
+
+
+</body>
+</html>
