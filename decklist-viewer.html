@@ -161,7 +161,10 @@ function modalizeDeck(deck_path, deck_path_short, deck_name) {
   var modalDeckEvent      = document.getElementById('modal-deck-event');
   var modalDeckFullname   = document.getElementById('modal-deck-fullname');
 
-  jQuery.getJSON( "https://res.starwarsccg.org/decklists/"+deck_path, function( data ) {
+  var decklist_json_url = "https://res.starwarsccg.org/decklists/"+deck_path;
+  decklist_json_url = "https://raw.githubusercontent.com/swccgpc/decklists/main/json/"+deck_path;
+
+  jQuery.getJSON( decklist_json_url, function( data ) {
     jQuery.each( data, function( key, decklists ) {
       console.log(key, decklists);
       modalDeckEvent.innerHTML    = decklists.userinfo.event;
@@ -247,10 +250,10 @@ function getUrlVars() {
 
   if ((window_location_hash == "") && (deck == undefined)) {
 
-    var decklist_json_url = "https://res.starwarsccg.org/decklists/index.json";
-    decklist_json_url = "https://raw.githubusercontent.com/swccgpc/decklists/main/json/index.json";
+    var decklist_index_json_url = "https://res.starwarsccg.org/decklists/index.json";
+    decklist_index_json_url = "https://raw.githubusercontent.com/swccgpc/decklists/main/json/index.json";
 
-    $.getJSON( decklist_json_url, function( data ) {
+    $.getJSON( decklist_index_json_url, function( data ) {
 
       $.each( data, function( event_name, swccg_event ) {
 
